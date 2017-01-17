@@ -20,10 +20,10 @@ public class TestGhostTextArea {
 		f.setSize(480, 360);
 		Container contentPane = f.getContentPane();
 		contentPane.setLayout(new BorderLayout());
-		GhostTextArea a = new GhostTextArea("Hallo");
+		GhostTextArea a = new GhostTextArea("Hallo", 100);
 		a.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		contentPane.add(a, BorderLayout.NORTH);
-		GhostTextArea b = new GhostTextArea("Klick mich");
+		GhostTextArea b = new GhostTextArea("Klick mich",100);
 		b.setLineWrap(true);
 		b.setWrapStyleWord(true);
 		b.setBorder(BorderFactory.createLineBorder(Color.BLACK));
