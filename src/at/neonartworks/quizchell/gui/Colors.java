@@ -8,4 +8,5 @@ public class Colors {
     public static final Color PALE_RED = new Color(245,220,220);
     public static final Color PALE_GREEN = new Color(220,245,220);
     public static final Color LIGHTER_GRAY = new Color(224, 224, 224);
+    public static final Color LOGO_GREEN = new Color(129, 215, 90);
 }
