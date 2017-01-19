@@ -11,6 +11,9 @@ import java.beans.PropertyChangeListener;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.PlainDocument;
 
 /**
  * A JTextArea which displays a light gray Text if it isn't focused and there is
@@ -29,7 +32,6 @@ public class GhostTextArea extends JTextArea {
     private String ghostText;
 
     private boolean ghost;
-    private int maxLen;
     private StringBuilder cache;
 
     /**
@@ -40,11 +42,10 @@ public class GhostTextArea extends JTextArea {
      *            The light gray text to be shown when the Component does not
      *            have focus and no text in it
      */
-    public GhostTextArea(String ghostText, int maxLeng) {
+    public GhostTextArea(String ghostText, int maxLen) {
 	super();
-	cache = new StringBuilder();
+	this.setDocument(new LimitDocument(maxLen));
 	this.ghostText = ghostText;
-	this.maxLen = maxLeng;
 	this.addFocusListener(new GhostTextListener());
 	/*
 	 * Wenn the GhostTextArea does have Focus at the beginning the ghost
@@ -55,14 +56,6 @@ public class GhostTextArea extends JTextArea {
 	    this.setForeground(GHOST_COLOR);
 	    ghost = true;
 	}
-	this.addKeyListener(new KeyAdapter() {
-	    @Override
-	    public void keyTyped(KeyEvent e) {
-		if (cache.length() < maxLen) {
-		    cache.append(e.getKeyChar());
-		}
-	    }
-	});
     }
 
     private class GhostTextListener implements FocusListener {
@@ -85,6 +78,23 @@ public class GhostTextArea extends JTextArea {
 	    }
 	}
 
+    }
+
+    private class LimitDocument extends PlainDocument {
+	
+	private int maxLen;
+	private LimitDocument(int maxLen) {
+	    this.maxLen = maxLen;
+	}
+
+	@Override
+	public void insertString(int offs, String str, AttributeSet a) throws BadLocationException {
+	    if (str == null)
+		return;
+
+	    if (getLength() + str.length() <= maxLen)
+		super.insertString(offs, str, a);
+	}
     }
 
     public String getGhostText() {

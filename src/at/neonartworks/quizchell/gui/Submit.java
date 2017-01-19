@@ -10,6 +10,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import com.sun.java.swing.plaf.windows.WindowsBorders.DashedBorder;
+
 import layout.TableLayout;
 
 public class Submit extends JFrame {
@@ -31,7 +33,7 @@ public class Submit extends JFrame {
     private JPanel getSubmitPane() {
 	if (submitPane == null) {
 	    submitPane = new JPanel();
-	    submitPane.setBackground(Colors.DARK_GRAY);
+	    submitPane.setBackground(Colors.DARK_GRAY_BLUE);
 	    submitPane.setLayout(createLayout());
 	    submitPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 	    submitPane.add(getQuestion(), "0,0, 1,0");
@@ -55,7 +57,7 @@ public class Submit extends JFrame {
 
     public GhostTextArea getQuestion() {
 	if (question == null) {
-	    question = new GhostTextArea("Frage", 2048);
+	    question = new GhostTextArea("Frage", 512);
 	    question.setBackground(Colors.LIGHTER_GRAY);
 	    question.setLineWrap(true);
 	    question.setWrapStyleWord(true);
