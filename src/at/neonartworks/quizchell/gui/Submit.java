@@ -2,15 +2,14 @@ package at.neonartworks.quizchell.gui;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
+import java.awt.Font;
 import java.awt.LayoutManager;
-import java.awt.RenderingHints;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
@@ -20,8 +19,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-
-import com.sun.java.swing.plaf.windows.WindowsBorders.DashedBorder;
 
 import layout.TableLayout;
 
@@ -154,14 +151,17 @@ public class Submit extends JFrame {
 			panelLogo.setBackground(submitPane.getBackground());
 
 			double f = TableLayout.FILL;
-			double[][] size = new double[][] { { 25, logoHeight, f, 25 }, { f } };
+			double[][] size = new double[][] { { 25, f, 25 }, { f } };
 			panelLogo.setLayout(new TableLayout(size));
 			BufferedImage img = null;
 			try {
-				img = ImageIO.read(ClassLoader.getSystemResourceAsStream("src/resources/Logo.png"));
-				if (img == null) {
+			    	URL url = ClassLoader.getSystemResource("src/resources/Logo.png");
+				if (url == null) {
 					File imgFile = new File("src/resources/Logo.png");
 					img = ImageIO.read(imgFile);
+				}
+				else{
+				    img = ImageIO.read(url);
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -170,18 +170,18 @@ public class Submit extends JFrame {
 			img = scaleImage(img, logoHeight, logoHeight);
 			ImageIcon ico = new ImageIcon(img);
 
-			JLabel labelIcon = new JLabel(ico);
-			JLabel labelText = new JLabel("QuizCHEL(L)");
+			JLabel labelText = new JLabel("QuizCHEL(L)", ico, JLabel.LEFT);
+			labelText.setHorizontalAlignment(JLabel.CENTER);
+			labelText.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 25));
 			labelText.setForeground(Colors.LOGO_GREEN);
 
-			panelLogo.add(labelIcon, "1,0");
-			panelLogo.add(labelText, "2,0");
+			panelLogo.add(labelText, "1,0");
 		}
 		return panelLogo;
 	}
 
 	private void abschicken() {
-
+	    //TODO SQL Client implementieren
 	}
 
 	private BufferedImage scaleImage(BufferedImage img, int height, int width) {
