@@ -10,4 +10,5 @@ public class Colors {
     // Currently not used, but looks nice
     public static final Color PALE_ORANGE = new Color(245, 210, 200);
     public static final Color LIGHTER_GRAY = new Color(224, 224, 224);
+    public static final Color LOGO_GREEN = new Color(129, 215, 90);
 }
