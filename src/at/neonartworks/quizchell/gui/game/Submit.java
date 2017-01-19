@@ -1,32 +1,28 @@
-package at.neonartworks.quizchell.gui;
+package at.neonartworks.quizchell.gui.game;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.LayoutManager;
-import java.awt.geom.AffineTransform;
-import java.awt.image.AffineTransformOp;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
+import java.awt.event.ActionEvent;
 
-import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import at.neonartworks.quizchell.data.NotYetImplementetException;
+import at.neonartworks.quizchell.gui.general.Design;
+import at.neonartworks.quizchell.gui.general.GhostTextArea;
+import at.neonartworks.quizchell.gui.general.LogoPanel;
 import layout.TableLayout;
 
 public class Submit extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 
-	private JPanel submitPane, panelBtnSubmit, panelLogo;
+	private JPanel submitPane, panelBtnSubmit;
+	private LogoPanel panelLogo;
 	private GhostTextArea question, ans1, ans2, ans3, ans4;
 	private JButton btnSubmit;
 	private final int logoHeight = 64;
@@ -43,7 +39,7 @@ public class Submit extends JFrame {
 	private JPanel getSubmitPane() {
 		if (submitPane == null) {
 			submitPane = new JPanel();
-			submitPane.setBackground(Colors.DARK_GRAY);
+			submitPane.setBackground(Design.DARK_GRAY);
 			submitPane.setLayout(createLayout());
 			submitPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 			submitPane.add(getPanelLogo(), "0,0, 1,0");
@@ -52,14 +48,14 @@ public class Submit extends JFrame {
 			submitPane.add(getAns2(), "1,2");
 			submitPane.add(getAns3(), "0,3");
 			submitPane.add(getAns4(), "1,3");
-			submitPane.add(getPanelBtnSubmit(), "0,3,1,3");
+			submitPane.add(getPanelBtnSubmit(), "0,4,1,4");
 		}
 		return submitPane;
 	}
 
 	private LayoutManager createLayout() {
 		final double f = TableLayout.FILL;
-		double rows[] = new double[] { logoHeight, f, f, f, f };
+		double rows[] = new double[] { logoHeight, f, f, f, 60 };
 		double cols[] = new double[] { f, f };
 		double size[][] = new double[][] { cols, rows };
 		TableLayout layout = new TableLayout(size);
@@ -68,8 +64,8 @@ public class Submit extends JFrame {
 
 	public GhostTextArea getQuestion() {
 		if (question == null) {
-			question = new GhostTextArea("Frage", 2048);
-			question.setBackground(Colors.LIGHTER_GRAY);
+			question = new GhostTextArea("Frage", 1024);
+			question.setBackground(Design.LIGHTER_GRAY);
 			question.setLineWrap(true);
 			question.setWrapStyleWord(true);
 			question.setBorder(BorderFactory.createLineBorder(submitPane.getBackground(), 10, false));
@@ -83,7 +79,7 @@ public class Submit extends JFrame {
 			ans1.setLineWrap(true);
 			ans1.setWrapStyleWord(true);
 			ans1.setBorder(BorderFactory.createLineBorder(submitPane.getBackground(), 10, false));
-			ans1.setBackground(Colors.PALE_GREEN);
+			ans1.setBackground(Design.PALE_GREEN);
 		}
 		return ans1;
 	}
@@ -94,7 +90,7 @@ public class Submit extends JFrame {
 			ans2.setLineWrap(true);
 			ans2.setWrapStyleWord(true);
 			ans2.setBorder(BorderFactory.createLineBorder(submitPane.getBackground(), 10, false));
-			ans2.setBackground(Colors.PALE_RED);
+			ans2.setBackground(Design.PALE_RED);
 		}
 		return ans2;
 	}
@@ -105,7 +101,7 @@ public class Submit extends JFrame {
 			ans3.setLineWrap(true);
 			ans3.setWrapStyleWord(true);
 			ans3.setBorder(BorderFactory.createLineBorder(submitPane.getBackground(), 10, false));
-			ans3.setBackground(Colors.PALE_RED);
+			ans3.setBackground(Design.PALE_RED);
 		}
 		return ans3;
 	}
@@ -116,7 +112,7 @@ public class Submit extends JFrame {
 			ans4.setLineWrap(true);
 			ans4.setWrapStyleWord(true);
 			ans4.setBorder(BorderFactory.createLineBorder(submitPane.getBackground(), 10, false));
-			ans4.setBackground(Colors.PALE_RED);
+			ans4.setBackground(Design.PALE_RED);
 		}
 		return ans4;
 	}
@@ -127,7 +123,7 @@ public class Submit extends JFrame {
 			btnSubmit.setPreferredSize(new Dimension(152, 50));
 			btnSubmit.setForeground(Color.BLACK);
 			btnSubmit.setBackground(Color.LIGHT_GRAY);
-			btnSubmit.addActionListener(e -> abschicken());
+			btnSubmit.addActionListener(e -> send(e));
 		}
 		return btnSubmit;
 	}
@@ -145,52 +141,19 @@ public class Submit extends JFrame {
 		return panelBtnSubmit;
 	}
 
-	public JPanel getPanelLogo() {
+	public LogoPanel getPanelLogo() {
 		if (panelLogo == null) {
-			panelLogo = new JPanel();
+			panelLogo = new LogoPanel("src/resources/Logo.png", "Quiz CHEL(L)", Design.LOGO_FONT, Design.LOGO_GREEN);
+			panelLogo.scale(logoHeight, logoHeight);
 			panelLogo.setBackground(submitPane.getBackground());
-
-			double f = TableLayout.FILL;
-			double[][] size = new double[][] { { 25, f, 25 }, { f } };
-			panelLogo.setLayout(new TableLayout(size));
-			BufferedImage img = null;
-			try {
-			    	URL url = ClassLoader.getSystemResource("src/resources/Logo.png");
-				if (url == null) {
-					File imgFile = new File("src/resources/Logo.png");
-					img = ImageIO.read(imgFile);
-				}
-				else{
-				    img = ImageIO.read(url);
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
-			img = scaleImage(img, logoHeight, logoHeight);
-			ImageIcon ico = new ImageIcon(img);
-
-			JLabel labelText = new JLabel("QuizCHEL(L)", ico, JLabel.LEFT);
-			labelText.setHorizontalAlignment(JLabel.CENTER);
-			labelText.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 25));
-			labelText.setForeground(Colors.LOGO_GREEN);
-
-			panelLogo.add(labelText, "1,0");
 		}
 		return panelLogo;
 	}
 
-	private void abschicken() {
-	    //TODO SQL Client implementieren
+	private void send(ActionEvent e) {
+		// TODO SQL Client implementieren
+		System.out.println(e.toString());
+		throw new NotYetImplementetException("SQL Acces not yet implementet");
 	}
 
-	private BufferedImage scaleImage(BufferedImage img, int height, int width) {
-		AffineTransform at = new AffineTransform();
-		at.scale((double) width / img.getWidth(), (double) height / img.getHeight());
-		AffineTransformOp op = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
-
-		BufferedImage tmp = new BufferedImage(width, height, BufferedImage.TYPE_4BYTE_ABGR);
-		op.filter(img, tmp);
-		return tmp;
-	}
 }

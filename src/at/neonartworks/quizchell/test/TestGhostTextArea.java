@@ -10,7 +10,7 @@ import javax.swing.JFrame;
 
 import org.junit.Test;
 
-import at.neonartworks.quizchell.gui.GhostTextArea;
+import at.neonartworks.quizchell.gui.general.GhostTextArea;
 
 public class TestGhostTextArea {
 

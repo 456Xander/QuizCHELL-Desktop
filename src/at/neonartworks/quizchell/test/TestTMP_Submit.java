@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import at.neonartworks.quizchell.gui.Submit;
+import at.neonartworks.quizchell.gui.game.Submit;
 
 public class TestTMP_Submit {
 

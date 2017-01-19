@@ -1,4 +1,4 @@
-package at.neonartworks.quizchell.gui;
+package at.neonartworks.quizchell.gui.general;
 
 import java.awt.Color;
 import java.awt.event.FocusEvent;
