@@ -16,11 +16,31 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import com.sun.org.apache.bcel.internal.generic.NEW;
+
 import layout.TableLayout;
 
+/**
+ * A {@link JPanel} which holdes a Logo and a text next to it.
+ * 
+ * @author Alexander Daum
+ *
+ */
 public class LogoPanel extends JPanel {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JLabel label;
 
+	/**
+	 * Creates a new LogoPanel with specified Icon and Text
+	 * 
+	 * @param ico
+	 *            The icon
+	 * @param text
+	 *            The text
+	 */
 	public LogoPanel(Icon ico, String text) {
 
 		double f = TableLayout.FILL;
@@ -30,12 +50,30 @@ public class LogoPanel extends JPanel {
 		this.add(label, "1,0");
 	}
 
+	/**
+	 * Creates a new {@link LogoPanel} with specified Icon, Text, Font and
+	 * TextColor
+	 * 
+	 * @param ico
+	 *            The Icon
+	 * @param text
+	 *            The Text
+	 * @param font
+	 *            The Font
+	 * @param textColor
+	 *            The Color of the text
+	 */
 	public LogoPanel(Icon ico, String text, Font font, Color textColor) {
 		this(ico, text);
 		label.setFont(font);
 		label.setForeground(textColor);
 	}
 
+	/**
+	 * 
+	 * @param img
+	 * @param text
+	 */
 	public LogoPanel(Image img, String text) {
 		this(new ImageIcon(img), text);
 	}
@@ -56,6 +94,15 @@ public class LogoPanel extends JPanel {
 		this(imgFromPath(path), text, font, textColor);
 	}
 
+	/**
+	 * Creates an Image from an path String. If the Project is run in eclipse it
+	 * uses the File, if it is packed in a jar it uses
+	 * ClassLoader.getSystemResource() to get the Image from within the jar
+	 * 
+	 * @param path
+	 *            The relative path to the image
+	 * @return
+	 */
 	public static BufferedImage imgFromPath(String path) {
 		BufferedImage img = null;
 		try {

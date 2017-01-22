@@ -12,9 +12,10 @@ public class TestQuestionGUI {
 
 	@Test
 	public void test() throws InterruptedException {
-		QuestionGUI subm = new QuestionGUI(new Question("Ist das ein Test", "Ja", "Nein", "Weiß nicht", "Hab Angst, aus Irgendeinem Grund versteh ich die Frage nicht oder"));
+		QuestionGUI subm = new QuestionGUI(new Question("Ist das ein Test", "Ja", "Nein", "Weiß nicht",
+				"Hab Angst, aus Irgendeinem Grund versteh ich die Frage nicht oder").setTime(10000));
 		subm.setVisible(true);
-		Thread.sleep(Long.MAX_VALUE);
+		System.out.println(subm.wasCorrect());
 	}
 
 }

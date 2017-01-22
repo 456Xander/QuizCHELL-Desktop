@@ -2,23 +2,34 @@ package at.neonartworks.quizchell.gui.game;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JTextArea;
-import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
-import javax.swing.border.LineBorder;
 
+import at.alex.multilinebutton.MultiLineButton;
 import at.neonartworks.quizchell.data.Question;
+import at.neonartworks.quizchell.gui.general.AdjustableBorderPanel;
 import at.neonartworks.quizchell.gui.general.Design;
 import at.neonartworks.quizchell.gui.general.LogoPanel;
-import at.neonartworks.quizchell.gui.general.MultiLineButton;
 import layout.TableLayout;
 
+/**
+ * The Question is displayed in a {@link JTextArea} at the top and the Answers
+ * are choosable from 4 {@link MultiLineButton} each centered in an
+ * {@link AdjustableBorderPanel}. Additionally there is a JProgressBar in the
+ * bottom which acts as a Timer.
+ * 
+ * @author Alexander Daum
+ *
+ */
 public class QuestionGUI extends JFrame {
 
 	/**
@@ -30,23 +41,66 @@ public class QuestionGUI extends JFrame {
 	private final int timeBarHeight = 32;
 	private JPanel contentPane;
 	private LogoPanel panelLogo;
-	private JButton btnAns1, btnAns2, btnAns3, btnAns4;
+	private MultiLineButton btnAns1, btnAns2, btnAns3, btnAns4;
 	private JProgressBar time;
 	private JTextArea txtQuestion;
 	private Question question;
 	private String[] shuffledAnswers;
+	private Timer timer;
+	/**
+	 * A String storing the clicked Answer
+	 */
+	private String clickedAnswer;
 
+	/**
+	 * Constructs a new QuestionGUI with the Question q. <br>
+	 * The Question is displayed in a {@link JTextArea} at the top and the
+	 * Answers are choosable from 4 {@link MultiLineButton} each centered in an
+	 * {@link AdjustableBorderPanel}. Additionally there is a JProgressBar in
+	 * the bottom which acts as a Timer.
+	 * 
+	 * @param q
+	 */
 	public QuestionGUI(Question q) {
 
 		this.question = q;
 		shuffledAnswers = q.getAnswers();
 		shuffleArray(shuffledAnswers);
 
+		this.timer = new Timer("QuestionTimer", true);
 		this.setContentPane(getpContentPane());
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setMinimumSize(new Dimension(480, 360));
+
 	}
 
+	public boolean wasCorrect() {
+		// A loop should be used according to Javadoc
+		while (clickedAnswer == null) {
+			// Acquire the lock
+			synchronized (this) {
+				try {
+					/*
+					 * Waits until notify is called. notify is called in the
+					 * Click Event of all Answer Buttons, or when the timer
+					 * ends.
+					 */
+					wait();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		// Close the Frame and return if the answer was true
+		this.dispose();
+		return question.getAns1().equals(clickedAnswer);
+	}
+
+	/**
+	 * Creates the contentPane
+	 * 
+	 * @return
+	 */
 	private JPanel getpContentPane() {
 		if (contentPane == null) {
 			contentPane = new JPanel();
@@ -54,16 +108,23 @@ public class QuestionGUI extends JFrame {
 			contentPane.setLayout(createLayout());
 			contentPane.setBackground(Design.DARK_GRAY);
 
+			// Add the Components
 			contentPane.add(getPanelLogo(), "0,0,2,0");
 			contentPane.add(getTxtQuestion(), "0,1,2,1");
-			contentPane.add(getBtnAns1(), "0,3");
-			contentPane.add(getBtnAns2(), "2,3");
-			contentPane.add(getBtnAns3(), "0,4");
-			contentPane.add(getBtnAns4(), "2,4");
+			contentPane.add(new AdjustableBorderPanel(getBtnAns1(), contentPane.getBackground()), "0,3");
+			contentPane.add(new AdjustableBorderPanel(getBtnAns2(), contentPane.getBackground()), "2,3");
+			contentPane.add(new AdjustableBorderPanel(getBtnAns3(), contentPane.getBackground()), "0,4");
+			contentPane.add(new AdjustableBorderPanel(getBtnAns4(), contentPane.getBackground()), "2,4");
+			contentPane.add(getTime(), "0,5,2,5");
 		}
 		return contentPane;
 	}
 
+	/**
+	 * Creates the Layout
+	 * 
+	 * @return
+	 */
 	private TableLayout createLayout() {
 		double f = TableLayout.FILL;
 		double[] rows = new double[] { logoHeight, f, 25, 0.35, 0.35, timeBarHeight };
@@ -72,6 +133,11 @@ public class QuestionGUI extends JFrame {
 		return new TableLayout(size);
 	}
 
+	/**
+	 * Creates the logo Panel
+	 * 
+	 * @return
+	 */
 	private LogoPanel getPanelLogo() {
 		if (panelLogo == null) {
 			panelLogo = new LogoPanel("src/resources/Logo.png", "Quiz CHEL(L)", Design.LOGO_FONT, Design.LOGO_GREEN);
@@ -81,50 +147,71 @@ public class QuestionGUI extends JFrame {
 		return panelLogo;
 	}
 
-	private JButton getBtnAns1() {
+	/**
+	 * Creates the Button for Answer 1
+	 * 
+	 * @return
+	 */
+	private MultiLineButton getBtnAns1() {
 		if (btnAns1 == null) {
-			btnAns1 = new MultiLineButton(shuffledAnswers[0]);
-			btnAns1.setPreferredSize(new Dimension(152, 50));
-			btnAns1.setBorder(new LineBorder(contentPane.getBackground(), 10));
-			btnAns1.setBackground(Color.LIGHT_GRAY);
+			btnAns1 = new MultiLineButton(shuffledAnswers[0], Color.LIGHT_GRAY);
+			btnAns1.setPreferredSize(new Dimension(172, 65));
 			btnAns1.setFont(null);
+			btnAns1.addActionListener(new AnswerBtnListener(shuffledAnswers[0]));
 		}
 		return btnAns1;
 	}
 
-	private JButton getBtnAns2() {
+	/**
+	 * Creates the Button for Answer 2
+	 * 
+	 * @return
+	 */
+	private MultiLineButton getBtnAns2() {
 		if (btnAns2 == null) {
-			btnAns2 = new MultiLineButton(shuffledAnswers[1]);
-			btnAns2.setPreferredSize(new Dimension(152, 50));
-			btnAns2.setBorder(new LineBorder(contentPane.getBackground(), 10));
-			btnAns2.setBackground(Color.LIGHT_GRAY);
+			btnAns2 = new MultiLineButton(shuffledAnswers[1], Color.LIGHT_GRAY);
+			btnAns2.setPreferredSize(new Dimension(172, 65));
 			btnAns2.setFont(null);
+			btnAns2.addActionListener(new AnswerBtnListener(shuffledAnswers[1]));
 		}
 		return btnAns2;
 	}
 
-	private JButton getBtnAns3() {
+	/**
+	 * Creates the Button for Answer 3
+	 * 
+	 * @return
+	 */
+	private MultiLineButton getBtnAns3() {
 		if (btnAns3 == null) {
-			btnAns3 = new MultiLineButton(shuffledAnswers[2]);
-			btnAns3.setPreferredSize(new Dimension(152, 50));
-			btnAns3.setBorder(new LineBorder(contentPane.getBackground(), 10));
-			btnAns3.setBackground(Color.LIGHT_GRAY);
+			btnAns3 = new MultiLineButton(shuffledAnswers[2], Color.LIGHT_GRAY);
+			btnAns3.setPreferredSize(new Dimension(172, 65));
 			btnAns3.setFont(null);
+			btnAns3.addActionListener(new AnswerBtnListener(shuffledAnswers[2]));
 		}
 		return btnAns3;
 	}
 
-	private JButton getBtnAns4() {
+	/**
+	 * Creates the Button for Answer 4
+	 * 
+	 * @return
+	 */
+	private MultiLineButton getBtnAns4() {
 		if (btnAns4 == null) {
-			btnAns4 = new MultiLineButton(shuffledAnswers[3]);
-			btnAns4.setPreferredSize(new Dimension(152, 50));
-			btnAns4.setBorder(new LineBorder(contentPane.getBackground(), 10));
-			btnAns4.setBackground(Color.LIGHT_GRAY);
+			btnAns4 = new MultiLineButton(shuffledAnswers[3], Color.LIGHT_GRAY);
+			btnAns4.setPreferredSize(new Dimension(172, 65));
 			btnAns4.setFont(null);
+			btnAns4.addActionListener(new AnswerBtnListener(shuffledAnswers[3]));
 		}
 		return btnAns4;
 	}
 
+	/**
+	 * Creates the Question Text Field
+	 * 
+	 * @return
+	 */
 	private JTextArea getTxtQuestion() {
 		if (txtQuestion == null) {
 			txtQuestion = new JTextArea();
@@ -136,9 +223,44 @@ public class QuestionGUI extends JFrame {
 		return txtQuestion;
 	}
 
-	private static void shuffleArray(String[] array) {
+	private JProgressBar getTime() {
+		if (time == null) {
+			time = new JProgressBar(0, question.getTime());
+			time.setValue(question.getTime());
+			TimerTask task = new TimerTask() {
+
+				@Override
+				public void run() {
+					int newValue = time.getValue() - 10;
+					if (newValue < 0) {
+						end();
+					}
+					time.setValue(newValue);
+					repaint();
+				}
+			};
+			timer.schedule(task, 10, 10);
+		}
+		return time;
+	}
+
+	private void end() {
+		clickedAnswer = "";
+		synchronized (this) {
+			notify();
+		}
+	}
+
+	/**
+	 * Shuffles an Array of any Type T. To do this it randomly switches
+	 * Elements. The result is again written in the parameter array
+	 * 
+	 * @param array
+	 *            the array to be shuffled
+	 */
+	private static <T> void shuffleArray(T[] array) {
 		int index;
-		String temp;
+		T temp;
 		Random random = new Random();
 		for (int i = array.length - 1; i > 0; i--) {
 			index = random.nextInt(i + 1);
@@ -146,6 +268,24 @@ public class QuestionGUI extends JFrame {
 			array[index] = array[i];
 			array[i] = temp;
 		}
+	}
+
+	private class AnswerBtnListener implements ActionListener {
+		private String ans;
+
+		public AnswerBtnListener(String ans) {
+			this.ans = ans;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			clickedAnswer = ans;
+			// Acquire the lock, so this Thread can notify the QuestionGUI
+			synchronized (QuestionGUI.this) {
+				QuestionGUI.this.notify();
+			}
+		}
+
 	}
 
 }
