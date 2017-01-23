@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import at.neonartworks.quizchell.gui.game.Submit;
 
-public class TestTMP_Submit {
+public class TestSubmit {
 
 	@Test
 	public void test() throws InterruptedException {

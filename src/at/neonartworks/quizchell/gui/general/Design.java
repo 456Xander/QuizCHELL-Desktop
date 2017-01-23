@@ -1,6 +1,7 @@
 package at.neonartworks.quizchell.gui.general;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 
 /**
@@ -20,4 +21,6 @@ public class Design {
 	public static final Color LOGO_GREEN = new Color(129, 215, 90);
 
 	public static final Font LOGO_FONT = new Font(Font.SANS_SERIF, Font.BOLD, 25);
+
+	public static final Dimension MIN_SIZE = new Dimension(480, 360);
 }

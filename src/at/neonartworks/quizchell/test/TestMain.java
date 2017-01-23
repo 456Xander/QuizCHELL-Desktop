@@ -1,7 +1,16 @@
 package at.neonartworks.quizchell.test;
 
+import org.junit.Test;
+
+import at.neonartworks.quizchell.gui.game.MainScreen;
+
 public class TestMain {
-	public static void main(String[] args) throws InterruptedException {
-		new TestTMP_Submit().test();
+
+	@Test
+	public void test() throws InterruptedException {
+		MainScreen m = new MainScreen();
+		m.setVisible(true);
+		Thread.sleep(Long.MAX_VALUE);
 	}
+
 }

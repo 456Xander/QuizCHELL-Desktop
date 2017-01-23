@@ -31,7 +31,7 @@ public class Submit extends JFrame {
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setTitle("Frage Einschicken");
 		this.setContentPane(getSubmitPane());
-		Dimension size = new Dimension(480, 360);
+		Dimension size = Design.MIN_SIZE;
 		this.setSize(size);
 		this.setMinimumSize(size);
 	}

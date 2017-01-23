@@ -70,7 +70,7 @@ public class QuestionGUI extends JFrame {
 		this.timer = new Timer("QuestionTimer", true);
 		this.setContentPane(getpContentPane());
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setMinimumSize(new Dimension(480, 360));
+		this.setMinimumSize(Design.MIN_SIZE);
 
 	}
 
