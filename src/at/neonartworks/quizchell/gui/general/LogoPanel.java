@@ -50,6 +50,7 @@ public class LogoPanel extends JPanel {
 			@Override
 			protected void paintComponent(Graphics g) {
 				Graphics2D g2 = (Graphics2D) g;
+				g2.
 				super.paintComponent(g);
 			}
 		};
