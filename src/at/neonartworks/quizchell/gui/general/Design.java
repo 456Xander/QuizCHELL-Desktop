@@ -23,4 +23,6 @@ public class Design {
 	public static final Font LOGO_FONT = new Font(Font.SANS_SERIF, Font.BOLD, 25);
 
 	public static final Dimension MIN_SIZE = new Dimension(480, 360);
+	
+	public static final int LOGO_HEIGHT = 64;
 }

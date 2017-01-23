@@ -116,6 +116,8 @@ public class GhostTextArea extends JTextArea {
 			if (str == null)
 				return;
 			// Only insert String if the new String does not exeed maximum Size
+			str = str.replace("\n", "");
+			str = str.replace("\r", "");
 			if (getLength() + str.length() <= maxLen)
 				super.insertString(offs, str, a);
 		}

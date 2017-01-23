@@ -10,7 +10,7 @@ public class TestMain {
 	public void test() throws InterruptedException {
 		MainScreen m = new MainScreen();
 		m.setVisible(true);
-		Thread.sleep(Long.MAX_VALUE);
+		System.out.println(m.getSelectedGame());
 	}
 
 }
