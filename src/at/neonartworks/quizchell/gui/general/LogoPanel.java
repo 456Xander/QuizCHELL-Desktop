@@ -2,6 +2,8 @@ package at.neonartworks.quizchell.gui.general;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
@@ -15,8 +17,6 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-
-import com.sun.org.apache.bcel.internal.generic.NEW;
 
 import layout.TableLayout;
 
@@ -46,7 +46,13 @@ public class LogoPanel extends JPanel {
 		double f = TableLayout.FILL;
 		double[][] size = new double[][] { { 25, f, 25 }, { f } };
 		this.setLayout(new TableLayout(size));
-		label = new JLabel(text, ico, JLabel.CENTER);
+		label = new JLabel(text, ico, JLabel.CENTER){
+			@Override
+			protected void paintComponent(Graphics g) {
+				Graphics2D g2 = (Graphics2D) g;
+				super.paintComponent(g);
+			}
+		};
 		this.add(label, "1,0");
 	}
 

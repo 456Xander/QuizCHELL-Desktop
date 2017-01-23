@@ -4,8 +4,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -97,7 +95,7 @@ public class MainScreen extends JFrame {
 
     public LogoPanel getPanelLogo() {
 	if (panelLogo == null) {
-	    panelLogo = new LogoPanel("src/resources/Logo.png", "Quiz CHEL(L)", Design.LOGO_FONT, Design.LOGO_GREEN);
+	    panelLogo = new LogoPanel("src/resources/Logo.png", "Quiz CHEL(L)", Design.LOGO_FONT, Design.LOGO_COLOR);
 	    panelLogo.scale(Design.LOGO_HEIGHT, Design.LOGO_HEIGHT);
 	    panelLogo.setBackground(mainPane.getBackground());
 	}

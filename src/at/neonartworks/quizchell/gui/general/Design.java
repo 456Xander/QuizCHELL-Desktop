@@ -11,7 +11,7 @@ import java.awt.Font;
  *
  */
 public class Design {
-	public static final Color DARK_GRAY = new Color(80, 80, 80);
+	public static final Color DARK_GRAY = new Color(60, 60, 60);
 	public static final Color DARK_GRAY_BLUE = new Color(80, 80, 80);
 	public static final Color PALE_RED = new Color(245, 200, 200);
 	public static final Color PALE_GREEN = new Color(200, 245, 200);
