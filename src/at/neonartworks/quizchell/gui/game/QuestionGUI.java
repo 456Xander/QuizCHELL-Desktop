@@ -140,7 +140,7 @@ public class QuestionGUI extends JFrame {
 	 */
 	private LogoPanel getPanelLogo() {
 		if (panelLogo == null) {
-			panelLogo = new LogoPanel("src/resources/Logo.png", "Quiz CHEL(L)", Design.LOGO_FONT, Design.LOGO_GREEN);
+			panelLogo = new LogoPanel("src/resources/Logo.png", "Quiz CHEL(L)", Design.LOGO_FONT, Design.LOGO_COLOR);
 			panelLogo.setBackground(contentPane.getBackground());
 			panelLogo.scale(logoHeight, logoHeight);
 		}
