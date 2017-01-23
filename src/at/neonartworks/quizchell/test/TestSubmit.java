@@ -12,7 +12,7 @@ public class TestSubmit {
 	public void test() throws InterruptedException {
 		Submit subm = new Submit();
 		subm.setVisible(true);
-		Thread.sleep(Long.MAX_VALUE);
+		System.out.println(subm.getQuestion());
 	}
 
 }
