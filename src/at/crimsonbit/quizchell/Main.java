@@ -1,13 +1,13 @@
-package at.neonartworks.quizchell;
+package at.crimsonbit.quizchell;
 
 import javax.swing.JOptionPane;
 
-import at.neonartworks.quizchell.data.GameType;
-import at.neonartworks.quizchell.data.NotYetImplementetException;
-import at.neonartworks.quizchell.data.Question;
-import at.neonartworks.quizchell.gui.game.MainScreen;
-import at.neonartworks.quizchell.gui.game.QuestionGUI;
-import at.neonartworks.quizchell.gui.game.Submit;
+import at.crimsonbit.quizchell.data.GameType;
+import at.crimsonbit.quizchell.data.NotYetImplementetException;
+import at.crimsonbit.quizchell.data.Question;
+import at.crimsonbit.quizchell.gui.game.MainScreen;
+import at.crimsonbit.quizchell.gui.game.QuestionGUI;
+import at.crimsonbit.quizchell.gui.game.Submit;
 
 public class Main {
     public static void main(String[] args) {

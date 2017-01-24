@@ -1,4 +1,4 @@
-package at.neonartworks.quizchell.data;
+package at.crimsonbit.quizchell.data;
 
 import java.net.CookieHandler;
 import java.net.CookieManager;

@@ -1,4 +1,4 @@
-package at.neonartworks.quizchell.data;
+package at.crimsonbit.quizchell.data;
 
 public class NotYetImplementetException extends RuntimeException {
 	public static final int ERROR_NOT_YET_IMPLEMENTET = 404;

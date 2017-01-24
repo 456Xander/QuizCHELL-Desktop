@@ -1,4 +1,4 @@
-package at.neonartworks.quizchell.gui.game;
+package at.crimsonbit.quizchell.gui.game;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -15,10 +15,10 @@ import javax.swing.JTextArea;
 import javax.swing.border.EmptyBorder;
 
 import at.alex.multilinebutton.MultiLineButton;
-import at.neonartworks.quizchell.data.Question;
-import at.neonartworks.quizchell.gui.general.AdjustableBorderPanel;
-import at.neonartworks.quizchell.gui.general.Design;
-import at.neonartworks.quizchell.gui.general.LogoPanel;
+import at.crimsonbit.quizchell.data.Question;
+import at.crimsonbit.quizchell.gui.general.AdjustableBorderPanel;
+import at.crimsonbit.quizchell.gui.general.Design;
+import at.crimsonbit.quizchell.gui.general.LogoPanel;
 import layout.TableLayout;
 
 /**

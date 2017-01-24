@@ -1,12 +1,12 @@
-package at.neonartworks.quizchell.test;
+package at.crimsonbit.quizchell.test;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import at.neonartworks.quizchell.data.Question;
-import at.neonartworks.quizchell.gui.game.QuestionGUI;
-import at.neonartworks.quizchell.gui.game.Submit;
+import at.crimsonbit.quizchell.data.Question;
+import at.crimsonbit.quizchell.gui.game.QuestionGUI;
+import at.crimsonbit.quizchell.gui.game.Submit;
 
 public class TestQuestionGUI {
 

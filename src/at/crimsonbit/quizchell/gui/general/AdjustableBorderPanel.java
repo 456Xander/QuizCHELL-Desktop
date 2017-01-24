@@ -1,4 +1,4 @@
-package at.neonartworks.quizchell.gui.general;
+package at.crimsonbit.quizchell.gui.general;
 
 import java.awt.Color;
 import java.awt.Component;

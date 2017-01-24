@@ -1,4 +1,4 @@
-package at.neonartworks.quizchell.data;
+package at.crimsonbit.quizchell.data;
 
 /**
  * A Class representing a Question

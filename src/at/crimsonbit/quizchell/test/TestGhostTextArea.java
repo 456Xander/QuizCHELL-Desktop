@@ -1,4 +1,4 @@
-package at.neonartworks.quizchell.test;
+package at.crimsonbit.quizchell.test;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -10,7 +10,7 @@ import javax.swing.JFrame;
 
 import org.junit.Test;
 
-import at.neonartworks.quizchell.gui.general.GhostTextArea;
+import at.crimsonbit.quizchell.gui.general.GhostTextArea;
 
 public class TestGhostTextArea {
 

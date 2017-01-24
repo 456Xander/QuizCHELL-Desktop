@@ -1,4 +1,4 @@
-package at.neonartworks.quizchell.data;
+package at.crimsonbit.quizchell.data;
 
 public enum GameType {
     SINGLEPLAYER,

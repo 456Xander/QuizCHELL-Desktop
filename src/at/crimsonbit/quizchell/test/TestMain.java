@@ -1,8 +1,8 @@
-package at.neonartworks.quizchell.test;
+package at.crimsonbit.quizchell.test;
 
 import org.junit.Test;
 
-import at.neonartworks.quizchell.gui.game.MainScreen;
+import at.crimsonbit.quizchell.gui.game.MainScreen;
 
 public class TestMain {
 
