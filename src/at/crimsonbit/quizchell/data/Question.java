@@ -9,6 +9,7 @@ package at.crimsonbit.quizchell.data;
 public class Question {
     private final String ques, ans1, ans2, ans3, ans4;
     private int time;
+    private QuestionSubject subject;
 
     /**
      * Constructs a new Question
@@ -20,12 +21,13 @@ public class Question {
      * @param ans3
      * @param ans4
      */
-    public Question(String ques, String ans1, String ans2, String ans3, String ans4) {
+    public Question(String ques, String ans1, String ans2, String ans3, String ans4, QuestionSubject subj) {
 	this.ques = ques;
 	this.ans1 = ans1;
 	this.ans2 = ans2;
 	this.ans3 = ans3;
 	this.ans4 = ans4;
+	this.subject = subj;
     }
 
     /**

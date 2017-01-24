@@ -220,8 +220,10 @@ public class Submit extends JFrame {
 
     private void doSubmit() {
 	try {
+	    QuestionSubject subject = new QuestionSubject((QuestionSubject.Subject) this.subjects.getSelectedItem(),
+		    (int) year.getValue());
 	    dataQuestion = new Question(question.getText(), ans1.getText(), ans2.getText(), ans3.getText(),
-		    ans4.getText());
+		    ans4.getText(), subject);
 	    synchronized (this) {
 		this.notify();
 	    }
