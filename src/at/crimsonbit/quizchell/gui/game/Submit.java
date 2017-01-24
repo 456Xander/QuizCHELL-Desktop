@@ -7,14 +7,21 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.image.BufferedImage;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerModel;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.border.EmptyBorder;
 
 import at.crimsonbit.quizchell.data.Question;
+import at.crimsonbit.quizchell.data.QuestionSubject;
 import at.crimsonbit.quizchell.gui.general.Design;
 import at.crimsonbit.quizchell.gui.general.GhostTextArea;
 import at.crimsonbit.quizchell.gui.general.LogoPanel;
@@ -24,17 +31,22 @@ public class Submit extends JFrame {
 
     private static final long serialVersionUID = 1L;
 
-    private JPanel submitPane, panelBtnSubmit;
+    private JPanel submitPane, panelBtnSubmit, subjectPane;
     private LogoPanel panelLogo;
     private GhostTextArea question, ans1, ans2, ans3, ans4;
     private Question dataQuestion = null;
     private JButton btnSubmit;
+    private JComboBox<QuestionSubject.Subject> subjects;
+    private JSpinner year;
+    private GhostTextArea[] textArs;
     private final int logoHeight = 64;
 
     public Submit() {
 	this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	this.setTitle("Frage Einschicken");
+	this.setIconImage(Design.LOGO);
 	this.setContentPane(getSubmitPane());
+	textArs = new GhostTextArea[] { question, ans1, ans2, ans3, ans4 };
 	Dimension size = Design.MIN_SIZE;
 	this.setSize(size);
 	this.setMinimumSize(size);
@@ -52,7 +64,8 @@ public class Submit extends JFrame {
 	    submitPane.add(getAns2(), "1,2");
 	    submitPane.add(getAns3(), "0,3");
 	    submitPane.add(getAns4(), "1,3");
-	    submitPane.add(getPanelBtnSubmit(), "0,4,1,4");
+	    submitPane.add(getPanelBtnSubmit(), "1,4,1,4");
+	    submitPane.add(getSubjectPane(), "0,4");
 	}
 	return submitPane;
     }
@@ -73,6 +86,7 @@ public class Submit extends JFrame {
 	    question.setLineWrap(true);
 	    question.setWrapStyleWord(true);
 	    question.setBorder(BorderFactory.createLineBorder(submitPane.getBackground(), 10, false));
+	    question.addKeyListener(new JumpToNextEmpty(0));
 	}
 	return question;
     }
@@ -84,6 +98,7 @@ public class Submit extends JFrame {
 	    ans1.setWrapStyleWord(true);
 	    ans1.setBorder(BorderFactory.createLineBorder(submitPane.getBackground(), 10, false));
 	    ans1.setBackground(Design.PALE_GREEN);
+	    ans1.addKeyListener(new JumpToNextEmpty(1));
 	}
 	return ans1;
     }
@@ -95,6 +110,7 @@ public class Submit extends JFrame {
 	    ans2.setWrapStyleWord(true);
 	    ans2.setBorder(BorderFactory.createLineBorder(submitPane.getBackground(), 10, false));
 	    ans2.setBackground(Design.PALE_RED);
+	    ans2.addKeyListener(new JumpToNextEmpty(2));
 	}
 	return ans2;
     }
@@ -106,6 +122,7 @@ public class Submit extends JFrame {
 	    ans3.setWrapStyleWord(true);
 	    ans3.setBorder(BorderFactory.createLineBorder(submitPane.getBackground(), 10, false));
 	    ans3.setBackground(Design.PALE_RED);
+	    ans3.addKeyListener(new JumpToNextEmpty(3));
 	}
 	return ans3;
     }
@@ -117,6 +134,7 @@ public class Submit extends JFrame {
 	    ans4.setWrapStyleWord(true);
 	    ans4.setBorder(BorderFactory.createLineBorder(submitPane.getBackground(), 10, false));
 	    ans4.setBackground(Design.PALE_RED);
+	    ans4.addKeyListener(new JumpToNextEmpty(4));
 	}
 	return ans4;
     }
@@ -147,11 +165,44 @@ public class Submit extends JFrame {
 
     public LogoPanel getPanelLogo() {
 	if (panelLogo == null) {
-	    panelLogo = new LogoPanel("src/resources/Logo.png", "Quiz CHEL(L)", Design.LOGO_FONT, Design.LOGO_COLOR);
+	    panelLogo = new LogoPanel(Design.LOGO, "Quiz CHEL(L)", Design.LOGO_FONT, Design.LOGO_COLOR);
 	    panelLogo.scale(logoHeight, logoHeight);
 	    panelLogo.setBackground(submitPane.getBackground());
 	}
 	return panelLogo;
+    }
+
+    public JPanel getSubjectPane() {
+	if (subjectPane == null) {
+	    subjectPane = new JPanel();
+	    double[] cols = new double[] { 0.7, 0.3 };
+	    double[] rows = new double[] { 15, TableLayout.FILL };
+	    TableLayout layout = new TableLayout(new double[][] { cols, rows });
+	    subjectPane.setLayout(layout);
+	    subjectPane.setBackground(submitPane.getBackground());
+	    JLabel label = new JLabel("Fachbereich und Jahrgang", JLabel.CENTER);
+	    label.setForeground(Design.PALE_BLUE);
+	    subjectPane.add(label, "0,0,1,0");
+	    subjectPane.add(getBoxSubjects(), "0,1,c,c");
+	    subjectPane.add(getSpinnerYear(), "1,1,c,c");
+	}
+	return subjectPane;
+    }
+
+    public JComboBox<QuestionSubject.Subject> getBoxSubjects() {
+	if (subjects == null) {
+	    subjects = new JComboBox<>(QuestionSubject.Subject.values());
+	    subjects.setBackground(Design.LIGHTER_GRAY);
+	}
+	return subjects;
+    }
+
+    public JSpinner getSpinnerYear() {
+	if (year == null) {
+	    year = new JSpinner(new SpinnerNumberModel(1, 1, 5, 1));
+	    year.setBackground(Design.LIGHTER_GRAY);
+	}
+	return year;
     }
 
     public Question getQuestion() {
@@ -167,45 +218,64 @@ public class Submit extends JFrame {
 	return dataQuestion;
     }
 
+    private void doSubmit() {
+	try {
+	    dataQuestion = new Question(question.getText(), ans1.getText(), ans2.getText(), ans3.getText(),
+		    ans4.getText());
+	    synchronized (this) {
+		this.notify();
+	    }
+	} catch (NullPointerException ex) {
+	    dataQuestion = null;
+	}
+
+    }
+
     private class SubmitListener implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-	    try {
-		dataQuestion = new Question(question.getText(), ans1.getText(), ans2.getText(), ans3.getText(),
-			ans4.getText());
-		synchronized (Submit.this) {
-		    Submit.this.notify();
-		}
-	    } catch (NullPointerException ex) {
-		dataQuestion = null;
-	    }
-
+	    doSubmit();
 	}
 
     }
-    
-    private class JumpToNextEmpty implements KeyListener{
-	
+
+    private class JumpToNextEmpty implements KeyListener {
+	private int instanceIndex;
+
+	public JumpToNextEmpty(int index) {
+	    instanceIndex = index;
+	}
+
 	@Override
 	public void keyTyped(KeyEvent e) {
-	    // TODO Auto-generated method stub
-	    
+
 	}
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-	    // TODO Auto-generated method stub
-	    
+
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-	    if(e.getKeyCode() == KeyEvent.VK_ENTER){
-		
+	    if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+		for (int i = instanceIndex + 1; i < textArs.length; i++) {
+		    if (textArs[i].isGhost() || textArs[i].getText().equals("")) {
+			textArs[i].grabFocus();
+			return;
+		    }
+		}
+		for (int i = 0; i <= instanceIndex; i++) {
+		    if (textArs[i].isGhost() || textArs[i].getText().equals("")) {
+			textArs[i].grabFocus();
+			return;
+		    }
+		}
+		doSubmit();
 	    }
 	}
-	
+
     }
 
 }

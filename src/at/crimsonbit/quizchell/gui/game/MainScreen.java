@@ -10,6 +10,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import at.crimsonbit.quizchell.data.GameType;
+import at.crimsonbit.quizchell.data.QuestionSubject;
 import at.crimsonbit.quizchell.gui.general.AdjustableBorderPanel;
 import at.crimsonbit.quizchell.gui.general.Design;
 import at.crimsonbit.quizchell.gui.general.LogoPanel;
@@ -28,6 +29,7 @@ public class MainScreen extends JFrame {
 	setDefaultCloseOperation(EXIT_ON_CLOSE);
 	setContentPane(getMainPane());
 	setMinimumSize(Design.MIN_SIZE);
+	setIconImage(Design.LOGO);
 	pack();
     }
 
@@ -130,6 +132,11 @@ public class MainScreen extends JFrame {
 	    }
 	}
 
+    }
+
+    public QuestionSubject[] getSelectedSubjects() {
+	// TODO Auto-generated method stub
+	return null;
     }
 
 }

@@ -66,7 +66,7 @@ public class QuestionGUI extends JFrame {
 		this.question = q;
 		shuffledAnswers = q.getAnswers();
 		shuffleArray(shuffledAnswers);
-
+		setIconImage(Design.LOGO);
 		this.timer = new Timer("QuestionTimer", true);
 		this.setContentPane(getpContentPane());
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

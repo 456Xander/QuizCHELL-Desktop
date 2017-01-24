@@ -13,7 +13,7 @@ public class TestQuestionGUI {
 	@Test
 	public void test() throws InterruptedException {
 		QuestionGUI subm = new QuestionGUI(new Question("Ist das ein Test", "Ja", "Nein", "Weiß nicht",
-				"Hab Angst, aus Irgendeinem Grund versteh ich die Frage nicht oder").setTime(10000));
+				"Hab Angst, aus Irgendeinem Grund versteh ich die Frage nicht oder").setTime(30000));
 		subm.setVisible(true);
 		System.out.println(subm.wasCorrect());
 	}

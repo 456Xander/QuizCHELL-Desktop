@@ -52,6 +52,7 @@ public class LogoPanel extends JPanel {
 	    protected void paintComponent(Graphics g) {
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+		g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		g2.setRenderingHint(RenderingHints.KEY_TEXT_LCD_CONTRAST, 250);
 		super.paintComponent(g2);
 	    }
@@ -132,18 +133,8 @@ public class LogoPanel extends JPanel {
 	BufferedImage img = new BufferedImage(label.getIcon().getIconWidth(), label.getIcon().getIconHeight(),
 		BufferedImage.TYPE_4BYTE_ABGR);
 	label.getIcon().paintIcon(null, img.getGraphics(), 0, 0);
-	BufferedImage scaled = scaleImage(img, height, width);
+	BufferedImage scaled = Design.scaleImage(img, height, width);
 	label.setIcon(new ImageIcon(scaled));
-    }
-
-    private BufferedImage scaleImage(BufferedImage img, int height, int width) {
-	AffineTransform at = new AffineTransform();
-	at.scale((double) width / img.getWidth(), (double) height / img.getHeight());
-	AffineTransformOp op = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
-
-	BufferedImage tmp = new BufferedImage(width, height, BufferedImage.TYPE_4BYTE_ABGR);
-	op.filter(img, tmp);
-	return tmp;
     }
 
 }

@@ -34,7 +34,6 @@ public class GhostTextArea extends JTextArea {
 	private static final long serialVersionUID = 1L;
 
 	private String ghostText;
-
 	private boolean ghost;
 	private StringBuilder cache;
 
@@ -129,6 +128,14 @@ public class GhostTextArea extends JTextArea {
 
 	public void setGhostText(String ghostText) {
 		this.ghostText = ghostText;
+	}
+
+	public boolean isGhost() {
+	    return ghost;
+	}
+
+	public void setGhost(boolean ghost) {
+	    this.ghost = ghost;
 	}
 
 }
