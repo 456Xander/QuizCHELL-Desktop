@@ -1,5 +1,7 @@
 package at.crimsonbit.quizchell;
 
+import org.jdom2.JDOMConstants;
+
 import at.crimsonbit.quizchell.data.Question;
 import at.crimsonbit.quizchell.data.QuestionSubject;
 
@@ -19,7 +21,6 @@ public abstract class QuizDelegate {
 		
 		@Override
 		public void addQuestion(Question q) {
-			// TODO Auto-generated method stub
 			
 		}
 		
