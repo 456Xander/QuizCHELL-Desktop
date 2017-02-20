@@ -3,26 +3,21 @@ package at.crimsonbit.quizchell.gui.general;
 import java.awt.Color;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
-import javax.swing.BorderFactory;
-import javax.swing.JPanel;
 import javax.swing.JTextArea;
+import javax.swing.border.EmptyBorder;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
 
 import com.sun.xml.internal.txw2.Document;
 
-import jdk.internal.org.objectweb.asm.tree.analysis.Analyzer;
-
 /**
  * A JTextArea which displays a light gray Text if it isn't focused and there is
  * not text in it. When there is no text when it looses focus the ghost text
  * will be displayed no matter what previously was in it.
+ * 
+ * @author Alexander Daum
  */
 public class GhostTextArea extends JTextArea {
 
@@ -35,7 +30,6 @@ public class GhostTextArea extends JTextArea {
 
 	private String ghostText;
 	private boolean ghost;
-	private StringBuilder cache;
 
 	/**
 	 * Constructs an empty {@link GhostTextArea} with specified ghostText to be
@@ -50,6 +44,7 @@ public class GhostTextArea extends JTextArea {
 		this.setDocument(new LimitDocument(maxLen));
 		this.ghostText = ghostText;
 		this.addFocusListener(new GhostTextListener());
+		setBorder(new EmptyBorder(10, 10, 10, 10));
 		/*
 		 * Wenn the GhostTextArea does have Focus at the beginning the ghost
 		 * text should not be shown
@@ -131,11 +126,11 @@ public class GhostTextArea extends JTextArea {
 	}
 
 	public boolean isGhost() {
-	    return ghost;
+		return ghost;
 	}
 
 	public void setGhost(boolean ghost) {
-	    this.ghost = ghost;
+		this.ghost = ghost;
 	}
 
 }

@@ -7,6 +7,8 @@ import java.awt.event.ActionListener;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -23,7 +25,7 @@ import layout.TableLayout;
 
 /**
  * The Question is displayed in a {@link JTextArea} at the top and the Answers
- * are choosable from 4 {@link MultiLineButton} each centered in an
+ * are selectable from 4 {@link MultiLineButton} each centered in an
  * {@link AdjustableBorderPanel}. Additionally there is a JProgressBar in the
  * bottom which acts as a Timer.
  * 
@@ -32,9 +34,6 @@ import layout.TableLayout;
  */
 public class QuestionGUI extends JFrame {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	private final int logoHeight = 64;
@@ -46,11 +45,11 @@ public class QuestionGUI extends JFrame {
 	private JTextArea txtQuestion;
 	private Question question;
 	private String[] shuffledAnswers;
-	private Timer timer;
+	private ScheduledThreadPoolExecutor exec;
 	/**
 	 * A String storing the clicked Answer
 	 */
-	private String clickedAnswer;
+	private String clickedAnswer = null;
 
 	/**
 	 * Constructs a new QuestionGUI with the Question q. <br>
@@ -67,13 +66,25 @@ public class QuestionGUI extends JFrame {
 		shuffledAnswers = q.getAnswers();
 		shuffleArray(shuffledAnswers);
 		setIconImage(Design.LOGO);
-		this.timer = new Timer("QuestionTimer", true);
+		this.exec = new ScheduledThreadPoolExecutor(0);
 		this.setContentPane(getpContentPane());
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setMinimumSize(Design.MIN_SIZE);
+		setVisible(true);
 
 	}
 
+	/**
+	 * This method pauses the current thread, and waits for the user to select
+	 * an answer. It returns when either the user has selected an answer or the
+	 * timer ran out. When the user selected an answer this method will return
+	 * whether it was the correct answer, if the time ran out, it will always
+	 * return false. Latter behavior is achieved by setting the selected answer
+	 * to an empty string, which will, hopefully, never be the correct answer.
+	 * 
+	 * @return whether the selected answer was correct, or false if no answer
+	 *         was selected in time
+	 */
 	public boolean wasCorrect() {
 		// A loop should be used according to Javadoc
 		while (clickedAnswer == null) {
@@ -227,7 +238,7 @@ public class QuestionGUI extends JFrame {
 		if (time == null) {
 			time = new JProgressBar(0, question.getTime());
 			time.setValue(question.getTime());
-			TimerTask task = new TimerTask() {
+			Runnable task = new Runnable() {
 
 				@Override
 				public void run() {
@@ -239,7 +250,7 @@ public class QuestionGUI extends JFrame {
 					repaint();
 				}
 			};
-			timer.schedule(task, 10, 10);
+			exec.scheduleAtFixedRate(task, 10, 10, TimeUnit.MILLISECONDS);
 		}
 		return time;
 	}
@@ -270,9 +281,24 @@ public class QuestionGUI extends JFrame {
 		}
 	}
 
+	/**
+	 * An Implementation of ActionListener for the Answer buttons on a
+	 * {@link QuestionGUI}. When an ActionEvent is fired, the wasCorrect method
+	 * will return if the Answer given in the Constructor
+	 * {@link AnswerBtnListener#AnswerBtnListener(String)} was correct.
+	 * 
+	 * @author Alexander Daum
+	 *
+	 */
 	private class AnswerBtnListener implements ActionListener {
 		private String ans;
 
+		/**
+		 * Creates a new {@link AnswerBtnListener}. The String ans is the answer
+		 * that should be selected when an ActionEvent is fired.
+		 * 
+		 * @param ans
+		 */
 		public AnswerBtnListener(String ans) {
 			this.ans = ans;
 		}
@@ -280,7 +306,6 @@ public class QuestionGUI extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			clickedAnswer = ans;
-			// Acquire the lock, so this Thread can notify the QuestionGUI
 			synchronized (QuestionGUI.this) {
 				QuestionGUI.this.notify();
 			}

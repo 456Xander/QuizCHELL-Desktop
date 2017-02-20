@@ -2,6 +2,7 @@ package at.crimsonbit.quizchell;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -17,27 +18,27 @@ import at.crimsonbit.quizchell.data.QuestionSubject;
 import at.crimsonbit.quizchell.data.QuizCHELLProperties;
 
 public abstract class QuizDelegate {
-	
+
 	public abstract void addQuestion(Question q);
-	
+
 	public abstract Question getRandomQuestion();
-	
+
 	public abstract Question getRandomQuestion(QuestionSubject[] subjects);
-	
+
 	public abstract void flush();
-	
+
 	public static class Local extends QuizDelegate {
-		
+
 		private Map<QuestionSubject, List<Question>> questions;
 		private Random random;
 		int ctr = -1;
-		
+
 		public Local() {
 			questions = read();
-			
+
 			random = new Random();
 		}
-		
+
 		@Override
 		public void addQuestion(Question q) {
 			List<Question> category = questions.get(q.getSubject());
@@ -47,7 +48,7 @@ public abstract class QuizDelegate {
 			}
 			category.add(q);
 		}
-		
+
 		@SuppressWarnings("unchecked")
 		@Override
 		public Question getRandomQuestion() {
@@ -58,19 +59,25 @@ public abstract class QuizDelegate {
 			int index = random.nextInt(selectedCategory.size());
 			return selectedCategory.get(index);
 		}
-		
+
 		@Override
 		public Question getRandomQuestion(QuestionSubject[] subjects) {
 			List<List<Question>> categories = new ArrayList<>();
 			for (QuestionSubject subj : subjects) {
-				categories.add(questions.get(subj));
+				List<Question> cat = questions.get(subj);
+				//If cat == null ==> no questions in this category
+				if (cat != null)
+					categories.add(cat);
+			}
+			if (categories.isEmpty()) {
+				return null;
 			}
 			int category = random.nextInt(categories.size());
 			List<Question> selectedCategory = categories.get(category);
 			int index = random.nextInt(selectedCategory.size());
 			return selectedCategory.get(index);
 		}
-		
+
 		@Override
 		public void flush() {
 			String path = QuizCHELLProperties.getDataPath();
@@ -88,9 +95,9 @@ public abstract class QuizDelegate {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
+
 		}
-		
+
 		@SuppressWarnings("unchecked")
 		private Map<QuestionSubject, List<Question>> read() {
 			String path = QuizCHELLProperties.getDataPath();
@@ -101,6 +108,16 @@ public abstract class QuizDelegate {
 				ObjectInputStream ous = new ObjectInputStream(new FileInputStream(store));
 				toRead = (Map<QuestionSubject, List<Question>>) ous.readObject();
 				ous.close();
+			} catch (FileNotFoundException e) {
+				// Data File does not exist, create it and write empty HashMap
+				try {
+					store.createNewFile();
+					ObjectOutputStream ous = new ObjectOutputStream(new FileOutputStream(store));
+					ous.writeObject(new HashMap<QuestionSubject, List<Question>>());
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+
 			} catch (IOException e) {
 				toRead = new HashMap<>();
 				// System.err.println("File " + path + "Cannot be found");
@@ -111,34 +128,34 @@ public abstract class QuizDelegate {
 			}
 			return toRead;
 		}
-		
+
 	}
-	
+
 	public static class SQL extends QuizDelegate {
-		
+
 		@Override
 		public void addQuestion(Question q) {
 			// TODO Auto-generated method stub
-			
+
 		}
-		
+
 		@Override
 		public Question getRandomQuestion() {
 			// TODO Auto-generated method stub
 			return null;
 		}
-		
+
 		@Override
 		public Question getRandomQuestion(QuestionSubject[] subjects) {
 			// TODO Auto-generated method stub
 			return null;
 		}
-		
+
 		@Override
 		public void flush() {
 			// TODO Auto-generated method stub
-			
+
 		}
-		
+
 	}
 }

@@ -17,14 +17,29 @@ import at.crimsonbit.quizchell.gui.general.LogoPanel;
 import at.crimsonbit.quizchell.gui.general.SubjectPane;
 import layout.TableLayout;
 
+/**
+ * The MainScreen is the part of QuizCHELL, which lets the user choose what
+ * he/she wants to do. Therefore there are some buttons to select actions and a
+ * {@link SubjectPane} to let the user choose the type of Question. The
+ * SubjectPane will later be replaced by a proper configuration in the settings,
+ * where multiple categories can be selected.
+ * 
+ * @author Alexander Daum
+ *
+ */
 public class MainScreen extends JFrame {
+	private static final long serialVersionUID = 1L;
+
 	private JPanel mainPane;
 	private SubjectPane subjectPane;
 	private JButton single, multi, submit, addFriend;
 	private final Dimension btnSize;
 	private LogoPanel panelLogo;
 	private GameType type = null;
-	
+
+	/**
+	 * Creates a new {@link MainScreen}
+	 */
 	public MainScreen() {
 		btnSize = new Dimension(200, 20);
 		setTitle("Quiz CHEL(L)");
@@ -34,7 +49,7 @@ public class MainScreen extends JFrame {
 		setIconImage(Design.LOGO);
 		pack();
 	}
-	
+
 	private TableLayout createLayout() {
 		double f = TableLayout.FILL;
 		double[] cols = new double[] { f, f };
@@ -42,7 +57,7 @@ public class MainScreen extends JFrame {
 		double[][] size = new double[][] { cols, rows };
 		return new TableLayout(size);
 	}
-	
+
 	private JPanel getMainPane() {
 		if (mainPane == null) {
 			mainPane = new JPanel();
@@ -57,7 +72,7 @@ public class MainScreen extends JFrame {
 		}
 		return mainPane;
 	}
-	
+
 	private JButton getSingle() {
 		if (single == null) {
 			single = new JButton("<html><body>Zuf&auml;llige Frage");
@@ -67,7 +82,7 @@ public class MainScreen extends JFrame {
 		}
 		return single;
 	}
-	
+
 	private JButton getMulti() {
 		if (multi == null) {
 			multi = new JButton("Mehrspieler");
@@ -77,7 +92,7 @@ public class MainScreen extends JFrame {
 		}
 		return multi;
 	}
-	
+
 	private JButton getSubmit() {
 		if (submit == null) {
 			submit = new JButton("Frage einsenden");
@@ -87,7 +102,7 @@ public class MainScreen extends JFrame {
 		}
 		return submit;
 	}
-	
+
 	private JButton getAddFriend() {
 		if (addFriend == null) {
 			addFriend = new JButton("<html><body>Freund hinzuf&uuml;gen");
@@ -97,8 +112,8 @@ public class MainScreen extends JFrame {
 		}
 		return addFriend;
 	}
-	
-	public LogoPanel getPanelLogo() {
+
+	private LogoPanel getPanelLogo() {
 		if (panelLogo == null) {
 			panelLogo = new LogoPanel("src/resources/Logo.png", "Quiz CHEL(L)", Design.LOGO_FONT, Design.LOGO_COLOR);
 			panelLogo.scale(Design.LOGO_HEIGHT, Design.LOGO_HEIGHT);
@@ -106,15 +121,28 @@ public class MainScreen extends JFrame {
 		}
 		return panelLogo;
 	}
-	
-	public JPanel getSubjectPane() {
+
+	private JPanel getSubjectPane() {
 		if (subjectPane == null) {
 			subjectPane = new SubjectPane();
 			subjectPane.setBackground(mainPane.getBackground());
 		}
 		return subjectPane;
 	}
-	
+
+	/**
+	 * GetSelectedGame is the suggested Method to get information on which
+	 * selection the user made. When called, the Method waits until the user
+	 * clicks one of the buttons and then returns. While the program is waiting,
+	 * the thread which called this method is paused and will continue when this
+	 * method returns. When the user has already clicked a button when this
+	 * method is called, it returns the selection instantly. <br>
+	 * It is suggested, that the using program hides or disposes this MainScreen
+	 * after getSelectedGame has returned, because otherwise the user could
+	 * wonder why this is still open.
+	 * 
+	 * @return
+	 */
 	public GameType getSelectedGame() {
 		while (type == null) {
 			synchronized (this) {
@@ -127,14 +155,31 @@ public class MainScreen extends JFrame {
 		}
 		return type;
 	}
-	
+
+	/**
+	 * An Implementation of ActionListener for the Buttons which should return a
+	 * GameType to {@linkplain MainScreen#getSelectedGame()}. Every button
+	 * adding this listener should represent the selection of the GameMode which
+	 * it provides in the Constructor {@link BtnListener#BtnListener(GameType)}
+	 * 
+	 * @author Alexander Daum
+	 *
+	 */
 	private class BtnListener implements ActionListener {
 		private GameType ty;
-		
+
+		/**
+		 * Creates a new {@link BtnListener} which will return the GameType t.
+		 * Any button which adds this Listener should represent the choice of
+		 * GameMode t
+		 * 
+		 * @param t
+		 *            The GameType that will be returned
+		 */
 		public BtnListener(GameType t) {
 			ty = t;
 		}
-		
+
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			MainScreen.this.type = ty;
@@ -142,11 +187,21 @@ public class MainScreen extends JFrame {
 				MainScreen.this.notify();
 			}
 		}
-		
+
 	}
-	
+
+	/**
+	 * Returns an Array of {@link QuestionSubject}, that the user has chosen to
+	 * play. This method sould always be called <b>after</b>
+	 * {@link MainScreen#getSelectedSubjects()}, because the user can change the
+	 * selected subjects until this frame is either hidden or disposed. Because
+	 * of this the method where a {@link MainScreen} is used, it should hide or
+	 * dispose after getSelectedSubjects is completed
+	 * 
+	 * @return An Array with the selected QuestionSubjects
+	 */
 	public QuestionSubject[] getSelectedSubjects() {
 		return new QuestionSubject[] { subjectPane.getSubject() };
 	}
-	
+
 }

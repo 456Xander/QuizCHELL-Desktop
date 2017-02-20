@@ -1,5 +1,7 @@
 package at.crimsonbit.quizchell.data;
 
+import at.crimsonbit.quizchell.Main;
+
 /**
  * GameType is an enum, that is used as return by the mainScreen to show which
  * Game or feature has been selected. For more detail see the documentation of
@@ -27,5 +29,10 @@ public enum GameType {
 	 * always start games against each other
 	 */
 	ADDFRIEND,
+	/**
+	 * Submit is used to enable the user to add a question. This question will
+	 * either be stored locally or uploaded into the questions database,
+	 * depending on {@link Main#delegate}. 
+	 */
 	SUBMIT;
 }
