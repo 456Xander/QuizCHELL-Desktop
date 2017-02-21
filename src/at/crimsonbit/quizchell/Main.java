@@ -11,6 +11,7 @@ import at.crimsonbit.quizchell.data.NotYetImplementetException;
 import at.crimsonbit.quizchell.data.Question;
 import at.crimsonbit.quizchell.data.QuestionSubject;
 import at.crimsonbit.quizchell.data.QuizCHELLProperties;
+import at.crimsonbit.quizchell.gui.game.FeedbackPane;
 import at.crimsonbit.quizchell.gui.game.MainScreen;
 import at.crimsonbit.quizchell.gui.game.QuestionGUI;
 import at.crimsonbit.quizchell.gui.game.QuizError;
@@ -31,9 +32,9 @@ public class Main {
 	 * 
 	 */
 	protected static QuizDelegate delegate = new QuizDelegate.Local();
-
+	
 	public static void main(String[] args) {
-
+		
 		// Create data folder if it does not exist
 		String path = QuizCHELLProperties.getDataPath();
 		File dataFolder = new File(path + "/");
@@ -45,7 +46,7 @@ public class Main {
 				e.printStackTrace();
 			}
 		}
-
+		
 		MainScreen mainScreen = new MainScreen();
 		mainScreen.setVisible(true);
 		GameType game = mainScreen.getSelectedGame();
@@ -67,7 +68,7 @@ public class Main {
 		}
 		mainScreen.dispose();
 	}
-
+	
 	/**
 	 * Starts a Submit GUI and submits the question to the SQL
 	 */
@@ -79,7 +80,7 @@ public class Main {
 		delegate.addQuestion(q);
 		delegate.flush();
 	}
-
+	
 	/**
 	 * Loads a Question from the {@link Main#delegate} and asks it. The Question
 	 * will not be counted anywhere.
@@ -93,8 +94,12 @@ public class Main {
 			System.exit(0);
 		}
 		QuestionGUI qGui = new QuestionGUI(q);
-		boolean answeredCorrect = qGui.wasCorrect();
-		JOptionPane.showMessageDialog(null, "Antwort: " + (answeredCorrect ? "richtig" : "falsch"));
+		FeedbackPane fbp;
+		do {
+			boolean answeredCorrect = qGui.wasCorrect();
+			fbp = qGui.getFeedback(answeredCorrect);
+		} while (fbp.doContinue());
+		
 	}
-
+	
 }

@@ -6,9 +6,10 @@ import java.awt.Font;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
+import java.net.URL;
 
 import javax.imageio.ImageIO;
 
@@ -66,18 +67,18 @@ public class Design {
 	static {
 		BufferedImage tmp = null;
 		try {
-			InputStream in = ClassLoader.getSystemResourceAsStream("src/resources/Logo.png");
+			URL in = Design.class.getResource("/resources/Logo.png");
 			if (in == null) {
-				in = new FileInputStream("src/resources/Logo.png");
+				in = new File("src/resources/Logo.png").toURI().toURL();
 			}
 			tmp = ImageIO.read(in);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
-		LOGO = scaleImage(tmp, 64, 64);
+		
+		LOGO = scaleImage(tmp, LOGO_HEIGHT, LOGO_HEIGHT);
 	}
-
+	
 	/**
 	 * Scales an Image to height and width. It uses AffineTransforms with
 	 * Bilinear filtering.
@@ -96,7 +97,7 @@ public class Design {
 		AffineTransform at = new AffineTransform();
 		at.scale((double) width / img.getWidth(), (double) height / img.getHeight());
 		AffineTransformOp op = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
-
+		
 		BufferedImage tmp = new BufferedImage(width, height, img.getType());
 		op.filter(img, tmp);
 		return tmp;

@@ -115,7 +115,7 @@ public class MainScreen extends JFrame {
 
 	private LogoPanel getPanelLogo() {
 		if (panelLogo == null) {
-			panelLogo = new LogoPanel("src/resources/Logo.png", "Quiz CHEL(L)", Design.LOGO_FONT, Design.LOGO_COLOR);
+			panelLogo = new LogoPanel(Design.LOGO, "Quiz CHEL(L)", Design.LOGO_FONT, Design.LOGO_COLOR);
 			panelLogo.scale(Design.LOGO_HEIGHT, Design.LOGO_HEIGHT);
 			panelLogo.setBackground(mainPane.getBackground());
 		}

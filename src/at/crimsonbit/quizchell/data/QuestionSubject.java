@@ -3,14 +3,14 @@ package at.crimsonbit.quizchell.data;
 import java.io.Serializable;
 
 public class QuestionSubject implements Serializable {
-
+	
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	private final Subject subject;
 	private final int year;
-
+	
 	public QuestionSubject(Subject subject, int year) {
 		if (year > 5) {
 			throw new IllegalArgumentException(
@@ -19,15 +19,15 @@ public class QuestionSubject implements Serializable {
 		this.subject = subject;
 		this.year = year;
 	}
-
+	
 	public Subject getSubject() {
 		return subject;
 	}
-
+	
 	public int getYear() {
 		return year;
 	}
-
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -36,7 +36,7 @@ public class QuestionSubject implements Serializable {
 		result = prime * result + year;
 		return result;
 	}
-
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -52,7 +52,12 @@ public class QuestionSubject implements Serializable {
 			return false;
 		return true;
 	}
-
+	
+	@Override
+	public String toString() {
+		return subject.toString() + " " + year;
+	}
+	
 	public static enum Subject implements Serializable {
 		/*
 		 * All Areas from which there are questions in QuizChell
@@ -75,7 +80,7 @@ public class QuestionSubject implements Serializable {
 		 * etc.
 		 */
 		MISC_HTL
-
+		
 	}
-
+	
 }
