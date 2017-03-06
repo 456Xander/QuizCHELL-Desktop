@@ -31,14 +31,16 @@ import layout.TableLayout;
  *
  */
 public class QuestionGUI extends JFrame {
-	
+
 	private static final long serialVersionUID = 1L;
-	
+
 	private String[] shuffledAnswers;
 	private QuestionPane questionPane;
 	private Question question;
 	private ScheduledThreadPoolExecutor exec;
-	
+
+	private FeedbackPane fbp;
+
 	/**
 	 * Constructs a new QuestionGUI with the Question q. <br>
 	 * The Question is displayed in a {@link JTextArea} at the top and the
@@ -48,20 +50,15 @@ public class QuestionGUI extends JFrame {
 	 * 
 	 * @param q
 	 */
-	public QuestionGUI(Question q) {
-		
-		this.question = q;
+	public QuestionGUI() {
 		exec = new ScheduledThreadPoolExecutor(0);
-		shuffledAnswers = q.getAnswers();
-		shuffleArray(shuffledAnswers);
 		setIconImage(Design.LOGO);
-		this.add(createQuestionPane());
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setMinimumSize(Design.MIN_SIZE);
 		setVisible(true);
-		
+
 	}
-	
+
 	/**
 	 * This method pauses the current thread, and waits for the user to select
 	 * an answer. It returns when either the user has selected an answer or the
@@ -76,12 +73,12 @@ public class QuestionGUI extends JFrame {
 	public boolean wasCorrect() {
 		return questionPane.wasCorrect();
 	}
-	
+
 	private QuestionPane createQuestionPane() {
 		questionPane = new QuestionPane(shuffledAnswers, question, exec);
 		return questionPane;
 	}
-	
+
 	/**
 	 * Generates a new QuestionPanel from the Question q and asks it. It has the
 	 * same effect as creating a new {@link QuestionGUI} with q as Question, but
@@ -95,18 +92,24 @@ public class QuestionGUI extends JFrame {
 		question = q;
 		shuffledAnswers = q.getAnswers();
 		shuffleArray(shuffledAnswers);
-		setContentPane(createQuestionPane());
-	}
-	
-	public FeedbackPane getFeedback(boolean correct) {
-		FeedbackPane fbp = new FeedbackPane(correct, question.getAns1());
-		remove(questionPane);
-		questionPane.setVisible(false);
-		add(fbp);
+		if (fbp != null)
+			remove(fbp);
+		add(createQuestionPane());
+		revalidate();
 		repaint();
+	}
+
+	public FeedbackPane getFeedback(boolean correct) {
+		fbp = new FeedbackPane(correct, question.getAns1());
+		remove(questionPane);
+		add(fbp);
+		fbp.setVisible(true);
+//		revalidate();
+		repaint();
+		revalidate();
 		return fbp;
 	}
-	
+
 	/**
 	 * Shuffles an Array of any Type T. To do this it randomly switches
 	 * Elements. The result is again written in the parameter array
@@ -125,5 +128,5 @@ public class QuestionGUI extends JFrame {
 			array[i] = temp;
 		}
 	}
-	
+
 }

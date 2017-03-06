@@ -32,9 +32,9 @@ public class Main {
 	 * 
 	 */
 	protected static QuizDelegate delegate = new QuizDelegate.Local();
-	
+
 	public static void main(String[] args) {
-		
+
 		// Create data folder if it does not exist
 		String path = QuizCHELLProperties.getDataPath();
 		File dataFolder = new File(path + "/");
@@ -46,7 +46,7 @@ public class Main {
 				e.printStackTrace();
 			}
 		}
-		
+
 		MainScreen mainScreen = new MainScreen();
 		mainScreen.setVisible(true);
 		GameType game = mainScreen.getSelectedGame();
@@ -68,7 +68,7 @@ public class Main {
 		}
 		mainScreen.dispose();
 	}
-	
+
 	/**
 	 * Starts a Submit GUI and submits the question to the SQL
 	 */
@@ -80,26 +80,28 @@ public class Main {
 		delegate.addQuestion(q);
 		delegate.flush();
 	}
-	
+
 	/**
 	 * Loads a Question from the {@link Main#delegate} and asks it. The Question
 	 * will not be counted anywhere.
 	 */
 	public static void casualQuestion(QuestionSubject[] subjects) {
-		Question q = null;
-		q = delegate.getRandomQuestion(subjects);
-		if (q == null) {
-			QuizError err = new QuizError("Wir konnten keine Fragen in einer deiner Kategorien finden");
-			err.waitFor();
-			System.exit(0);
-		}
-		QuestionGUI qGui = new QuestionGUI(q);
+		QuestionGUI qGui = new QuestionGUI();
 		FeedbackPane fbp;
+		
 		do {
+			Question q = null;
+			q = delegate.getRandomQuestion(subjects);
+			if (q == null) {
+				QuizError err = new QuizError("Wir konnten keine Fragen in einer deiner Kategorien finden");
+				err.waitFor();
+				System.exit(0);
+			}
+			qGui.askQuestion(q);
 			boolean answeredCorrect = qGui.wasCorrect();
 			fbp = qGui.getFeedback(answeredCorrect);
 		} while (fbp.doContinue());
-		
+		System.exit(0);
 	}
-	
+
 }
